@@ -90,8 +90,11 @@ fun CameraScreen() {
             }
 
         } else {
-            Text("Camera permission required", Modifier.align(Alignment.Center))
+            PermissionDeniedUI(
+                onRetry = { launcherCamera.launch(Manifest.permission.CAMERA) }
+            )
         }
+
 
         IconButton(
             onClick = {
@@ -195,3 +198,42 @@ fun takePhoto(
         }
     )
 }
+
+@Composable
+fun PermissionDeniedUI(onRetry: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(32.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+            elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Izin kamera diperlukan",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    "Aplikasi membutuhkan akses kamera untuk mengambil foto. " +
+                            "Silakan izinkan akses kamera agar fitur dapat berjalan.",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Spacer(Modifier.height(20.dp))
+                Button(onClick = onRetry) {
+                    Text("Izinkan Kamera")
+                }
+            }
+        }
+    }
+}
+
